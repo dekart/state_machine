@@ -396,14 +396,14 @@ module StateMachine
         # states for the attribute
         def create_with_scope(name)
           attribute = self.attribute
-          define_scope(name, lambda {|values| {:conditions => {attribute => values}}})
+          define_scope(name, lambda {|values| {:conditions => ["#{owner_class.table_name}.#{attribute} IN (?)", values]}})
         end
         
         # Creates a scope for finding records *without* a particular state or
         # states for the attribute
         def create_without_scope(name)
           attribute = self.attribute
-          define_scope(name, lambda {|values| {:conditions => ["#{attribute} NOT IN (?)", values]}})
+          define_scope(name, lambda {|values| {:conditions => ["#{owner_class.table_name}.#{attribute} NOT IN (?)", values]}})
         end
         
         # Runs a new database transaction, rolling back any changes by raising
